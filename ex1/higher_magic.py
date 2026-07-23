@@ -7,7 +7,7 @@
 #   By: jay-k <jay-k@student.42.fr>                  +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/07/21 21:10:20 by jay-k               #+#    #+#            #
-#   Updated: 2026/07/21 23:49:02 by jay-k              ###   ########.fr      #
+#   Updated: 2026/07/22 22:13:00 by jay-k              ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -41,28 +41,41 @@ def spell_sequence(spells: list[Callable]) -> Callable:
     return cast_all
 
 
-def fireball(target: str, power: int) -> str:
+def spell1(target: str, power: int) -> str:
     return f"Fireball hits {target} for {power} HP"
 
 
-def heal(target: str, power: int) -> str:
+def spell2(target: str, power: int) -> str:
     return f"Heal restores {target} for {power} HP"
+
+
+def is_powerful(target: str, power: int) -> bool:
+    return power >= 20
+
 
 if __name__ == "__main__":
     test_values = [22, 7, 7]
     test_targets = ['Dragon', 'Goblin', 'Wizard', 'Knight']
+
     print("Testing spell combiner...")
-    combined = spell_combiner(fireball, heal)
+    combined = spell_combiner(spell1, spell2)
     result = combined("Dragon", 10)
     print(f"Combined spell result: {result}")
     print("\n")
-
-#     print("\nTesting power amplifier...")
-# mega_fireball = power_amplifier(fireball, 3)
-# original = fireball(test_targets[0], test_values[0])
-# amplified = mega_fireball(test_targets[0], test_values[0])
-# print(f"Original: {original}")
-# print(f"Amplified: {amplified}")
-
-# def is_powerful(target: str, power: int) -> bool:
-#     return power >= 20
+    print("Testing power amplifier...")
+    mega_fireball = power_amplifier(spell1, 3)
+    original_power = spell1(test_targets[0], test_values[0])
+    amplified_power = mega_fireball(test_targets[0], test_values[0])
+    print(f"Original: {original_power}, Amplified: {amplified_power}")
+    print("\n")
+    print("Testing conditional caster...")
+    guarded_fireball = conditional_caster(is_powerful, spell1)
+    strong_result = guarded_fireball(test_targets[0], test_values[0])
+    weak_result = guarded_fireball(test_targets[1], test_values[1])
+    print(strong_result)
+    print(weak_result)
+    print("\n")
+    print("Testing spell sequence...")
+    sequence = spell_sequence([spell1, spell2])
+    results = sequence(test_targets[2], test_values[2])
+    print(results)
